@@ -1,0 +1,64 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Payment cards — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<header class="dash-header">
+    <p class="section-eyebrow">Your account</p>
+    <h1 class="dash-greeting">Payment cards</h1>
+    <p class="dash-subtitle">Cards saved to your account for faster checkout.</p>
+</header>
+
+<div class="cards-list">
+
+    <!-- Demo saved card -->
+    <div class="saved-card saved-card--visa">
+        <div class="saved-card-top">
+            <span class="saved-card-brand">VISA</span>
+            <span class="saved-card-default">Default</span>
+        </div>
+        <p class="saved-card-number">•••• •••• •••• 4242</p>
+        <div class="saved-card-bottom">
+            <div>
+                <p class="saved-card-label">Cardholder</p>
+                <p class="saved-card-value">{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div>
+                <p class="saved-card-label">Expires</p>
+                <p class="saved-card-value">12 / 27</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo saved card -->
+    <div class="saved-card saved-card--mastercard">
+        <div class="saved-card-top">
+            <span class="saved-card-brand">Mastercard</span>
+        </div>
+        <p class="saved-card-number">•••• •••• •••• 5555</p>
+        <div class="saved-card-bottom">
+            <div>
+                <p class="saved-card-label">Cardholder</p>
+                <p class="saved-card-value">{{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+            <div>
+                <p class="saved-card-label">Expires</p>
+                <p class="saved-card-value">08 / 26</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="cards-demo-note">
+    <p>
+        This is a demo. Cards shown here are placeholders and no real card data
+        is stored. In a production store, cards would be saved through Stripe
+        or PayPal, which store the sensitive data — never your own database.
+    </p>
+</div>
+
+<button class="btn cards-add-btn" disabled>Add a new card (coming soon)</button>
+
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-checkout{% endblock %}
+{% block title %}Checkout — Flowerworld{% endblock %}
+
+{% block content %}
+<section class="checkout-shell">
+    <div class="checkout-inner">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash--{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <header class="checkout-header">
+            <p class="section-eyebrow">Almost there</p>
+            <h1 class="checkout-title">Checkout</h1>
+        </header>
+
+        <form method="POST" action="/checkout" class="checkout-form" id="checkoutForm">
+
+            <div class="checkout-grid">
+
+                <!-- ============ LEFT: FORMS ============ -->
+                <div class="checkout-forms">
+
+                    <!-- ===== Saved addresses ===== -->
+                    {% if saved_addresses %}
+                    <div class="checkout-card">
+                        <h2 class="checkout-card-title">Choose an address</h2>
+                        <p class="checkout-card-hint">Click a saved address to fill in the form, or enter a new one below.</p>
+
+                        <div class="saved-addresses">
+                            {% for addr in saved_addresses %}
+                            <button type="button"
+                                    class="saved-address {% if addr.is_default %}is-default{% endif %}"
+                                    data-address-id="{{ addr.id }}"
+                                    data-full-name="{{ addr.full_name }}"
+                                    data-phone="{{ addr.phone }}"
+                                    data-line1="{{ addr.address_line1 }}"
+                                    data-line2="{{ addr.address_line2 or '' }}"
+                                    data-city="{{ addr.city }}"
+                                    data-state="{{ addr.state or '' }}"
+                                    data-postal="{{ addr.postal_code }}"
+                                    data-country="{{ addr.country }}">
+                                <div class="saved-address-top">
+                                    <span class="saved-address-label">{{ addr.label }}</span>
+                                    {% if addr.is_default %}
+                                    <span class="saved-address-badge">Default</span>
+                                    {% endif %}
+                                </div>
+                                <p class="saved-address-name">{{ addr.full_name }}</p>
+                                <p class="saved-address-line">{{ addr.address_line1 }}</p>
+                                <p class="saved-address-line">{{ addr.city }}{% if addr.state %}, {{ addr.state }}{% endif %} {{ addr.postal_code }}</p>
+                                <p class="saved-address-line">{{ addr.country }}</p>
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- ===== Shipping form ===== -->
+                    <div class="checkout-card">
+                        <h2 class="checkout-card-title">Shipping details</h2>
+
+                        <div class="form-group">
+                            <label class="form-label">Full name *</label>
+                            <input type="text" name="full_name" id="field_full_name" class="form-input" value="{{ g.user.first_name }} {{ g.user.last_name }}" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Email *</label>
+                                <input type="email" name="email" class="form-input" value="{{ g.user.email }}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Phone *</label>
+                                <input type="tel" name="phone" id="field_phone" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Address line 1 *</label>
+                            <input type="text" name="address_line" id="field_address_line" class="form-input" placeholder="Street address, P.O. box" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Address line 2</label>
+                            <input type="text" id="field_address_line2" class="form-input" placeholder="Apartment, suite (optional)">
+                        </div>
+
+                        <div class="form-row form-row--3">
+                            <div class="form-group">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="city" id="field_city" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">State / Province</label>
+                                <input type="text" id="field_state" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Postal code *</label>
+                                <input type="text" name="postal_code" id="field_postal_code" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Country *</label>
+                            <input type="text" name="country" id="field_country" class="form-input" required>
+                        </div>
+
+                        <label class="form-check">
+                            <input type="checkbox" name="save_address">
+                            Save this address to my address book
+                        </label>
+
+                        <label class="form-check">
+                            <input type="checkbox" name="make_default">
+                            Set as default address
+                        </label>
+                    </div>
+
+                    <!-- ===== Payment (DEMO) ===== -->
+                    <div class="checkout-card">
+                        <h2 class="checkout-card-title">Payment</h2>
+                        <p class="checkout-demo-note">
+                            Demo checkout — no real payment is charged. In a live store this form
+                            would be handled securely by Stripe or PayPal.
+                        </p>
+
+                        <div class="form-group">
+                            <label class="form-label">Card number</label>
+                            <input type="text" id="card_number" class="form-input card-input" placeholder="4242 4242 4242 4242" inputmode="numeric" maxlength="19">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Name on card</label>
+                                <input type="text" id="card_name" class="form-input card-input" placeholder="{{ g.user.first_name }} {{ g.user.last_name }}">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CVC</label>
+                                <input type="text" id="card_cvc" class="form-input card-input" placeholder="123" inputmode="numeric" maxlength="4">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Expiry month</label>
+                                <input type="text" id="card_month" class="form-input card-input" placeholder="MM" inputmode="numeric" maxlength="2">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Expiry year</label>
+                                <input type="text" id="card_year" class="form-input card-input" placeholder="YY" inputmode="numeric" maxlength="2">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ============ RIGHT: SUMMARY ============ -->
+                <aside class="checkout-summary">
+                    <h2 class="cart-summary-title">Order summary</h2>
+
+                    <div class="checkout-items">
+                        {% for item in cart_items %}
+                        <div class="checkout-item">
+                            <div class="checkout-item-image">
+                                <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+                            </div>
+                            <div class="checkout-item-info">
+                                <p class="checkout-item-name">{{ item.product.name }}</p>
+                                <p class="checkout-item-meta">Qty {{ item.quantity }}</p>
+                            </div>
+                            <p class="checkout-item-total">${{ "%.2f"|format(item.product.price * item.quantity) }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <span>${{ "%.2f"|format(subtotal) }}</span>
+                    </div>
+                    <div class="cart-summary-row">
+                        <span>Shipping</span>
+                        <span>{% if shipping == 0 %}Free{% else %}${{ "%.2f"|format(shipping) }}{% endif %}</span>
+                    </div>
+
+                    <div class="cart-summary-total">
+                        <span>Total</span>
+                        <span>${{ "%.2f"|format(total) }}</span>
+                    </div>
+
+                    <button type="submit" class="btn checkout-submit">Place order</button>
+                    <a href="/cart" class="cart-continue">← Back to cart</a>
+                </aside>
+
+            </div>
+        </form>
+
+    </div>
+</section>
+
+<script>
+(function () {
+    const savedCards = document.querySelectorAll('.saved-address');
+    const form = document.getElementById('checkoutForm');
+    if (!form) return;
+
+    function fillField(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.value = value || '';
+    }
+
+    savedCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            // Toggle active state
+            savedCards.forEach(function (c) { c.classList.remove('is-selected'); });
+            card.classList.add('is-selected');
+
+            // Fill the form
+            fillField('field_full_name', card.dataset.fullName);
+            fillField('field_phone', card.dataset.phone);
+            fillField('field_address_line', card.dataset.line1);
+            fillField('field_address_line2', card.dataset.line2);
+            fillField('field_city', card.dataset.city);
+            fillField('field_state', card.dataset.state);
+            fillField('field_postal_code', card.dataset.postal);
+            fillField('field_country', card.dataset.country);
+
+            // Scroll to the shipping form so the user can see the filled fields
+            document.getElementById('field_full_name').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    });
+})();
+</script>
+{% endblock %}

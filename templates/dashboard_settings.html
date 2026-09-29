@@ -1,0 +1,35 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Settings — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<header class="dash-header">
+    <p class="section-eyebrow">Your account</p>
+    <h1 class="dash-greeting">Settings</h1>
+    <p class="dash-subtitle">Manage your profile and preferences.</p>
+</header>
+
+<div class="dash-settings">
+    <div class="dash-setting-row">
+        <div>
+            <p class="dash-setting-label">Name</p>
+            <p class="dash-setting-value">{{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+    </div>
+    <div class="dash-setting-row">
+        <div>
+            <p class="dash-setting-label">Email</p>
+            <p class="dash-setting-value">{{ user.email }}</p>
+        </div>
+    </div>
+    <div class="dash-setting-row">
+        <div>
+            <p class="dash-setting-label">Password</p>
+            <p class="dash-setting-value">••••••••</p>
+        </div>
+        <button class="btn-outline" disabled>Change password</button>
+    </div>
+</div>
+
+{% endblock %}

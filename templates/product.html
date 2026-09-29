@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-product{% endblock %}
+{% block title %}{{ product.name }} — Flowerworld{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+
+    <!-- LEFT: image -->
+    <div class="product-detail-image">
+        <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+    </div>
+
+    <!-- RIGHT: info -->
+    <div class="product-detail-info">
+        <p class="product-detail-category">{{ product.category }}</p>
+        <h1 class="product-detail-name">{{ product.name }}</h1>
+        {% if g.user %}
+<form method="POST" action="/wishlist/toggle/{{ product.id }}" class="wishlist-form-detail">
+    <button type="submit" class="wishlist-btn-detail {% if product.id in g.wishlist_ids %}is-active{% endif %}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        {% if product.id in g.wishlist_ids %}Saved to wishlist{% else %}Save to wishlist{% endif %}
+    </button>
+</form>
+{% endif %}
+        <p class="product-detail-price">${{ product.price }}</p>
+
+        <p class="product-detail-description">{{ product.description }}</p>
+
+        <div class="product-detail-stock">
+            {% if product.stock > 0 %}
+                <span class="in-stock">In stock — {{ product.stock }} available</span>
+            {% else %}
+                <span class="out-stock">Sold out</span>
+            {% endif %}
+        </div>
+
+        <form class="product-detail-form" method="POST" action="/cart/add/{{ product.id }}">
+    <label for="qty" class="qty-label">Quantity</label>
+    <div class="product-detail-actions">
+        <input type="number" id="qty" name="quantity" class="qty-input" value="1" min="1" max="{{ product.stock }}">
+        <button type="submit" class="btn add-to-cart">Add to cart</button>
+    </div>
+</form>
+
+        <a href="/shop" class="back-link">← Back to shop</a>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-shop{% endblock %}
+{% block title %}Shop — Flowerworld{% endblock %}
+
+{% block content %}
+<div class="shop-container">
+
+    <!-- ============ SIDEBAR ============ -->
+  <aside class="shop-sidebar">
+    <form method="GET" action="/shop">
+
+        <div class="filter-block">
+            <h4 class="filter-heading">Sort By</h4>
+            <select name="sort" class="filter-select" onchange="this.form.submit()">
+                <option value="featured" {% if request.args.get('sort') == 'featured' or not request.args.get('sort') %}selected{% endif %}>Featured</option>
+                <option value="price_asc" {% if request.args.get('sort') == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if request.args.get('sort') == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="newest" {% if request.args.get('sort') == 'newest' %}selected{% endif %}>Newest</option>
+            </select>
+        </div>
+
+        <div class="filter-block">
+            <h4 class="filter-heading">Category</h4>
+            <label class="filter-check">
+                <input type="checkbox" name="category" value="wreaths"
+                       {% if 'wreaths' in request.args.getlist('category') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                Wreaths
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="category" value="bunches"
+                       {% if 'bunches' in request.args.getlist('category') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                Dried Bunches
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="category" value="home"
+                       {% if 'home' in request.args.getlist('category') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                For the Home
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="category" value="seasonal"
+                       {% if 'seasonal' in request.args.getlist('category') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                Seasonal
+            </label>
+        </div>
+
+        <div class="filter-block">
+            <h4 class="filter-heading">Price</h4>
+            <label class="filter-check">
+                <input type="checkbox" name="price" value="0-25"
+                       {% if '0-25' in request.args.getlist('price') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                Under $25
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="price" value="25-60"
+                       {% if '25-60' in request.args.getlist('price') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                $25 – $60
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="price" value="60-100"
+                       {% if '60-100' in request.args.getlist('price') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                $60 – $100
+            </label>
+            <label class="filter-check">
+                <input type="checkbox" name="price" value="100-9999"
+                       {% if '100-9999' in request.args.getlist('price') %}checked{% endif %}
+                       onchange="this.form.submit()">
+                Over $100
+            </label>
+        </div>
+
+    </form>
+</aside>
+    <!-- ============ MAIN ============ -->
+    <main class="shop-main">
+        <header class="shop-header">
+            <p class="section-eyebrow">The collection</p>
+            <h1 class="shop-title">All pieces</h1>
+            <p class="shop-count">{{ products|length }} items</p>
+        </header>
+
+        <div class="shop-grid">
+            {% for product in products %}
+            {% for product in products %}
+<article class="shop-card">
+    <div class="shop-card-media">
+        <a href="/product/{{ product.id }}" class="shop-card-image">
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+        </a>
+
+        {% if g.user %}
+        <form method="POST" action="/wishlist/toggle/{{ product.id }}" class="wishlist-form">
+            <button type="submit" class="wishlist-btn {% if product.id in g.wishlist_ids %}is-active{% endif %}" aria-label="Toggle wishlist">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="shop-card-info">
+        <h3 class="shop-card-name">{{ product.name }}</h3>
+        <p class="shop-card-price">${{ product.price }}</p>
+    </div>
+</article>
+{% endfor %}
+            {% endfor %}
+        </div>
+    </main>
+
+</div>
+{% endblock %}

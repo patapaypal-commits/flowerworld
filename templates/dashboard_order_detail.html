@@ -1,0 +1,65 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Order #{{ order.id }} — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<a href="/dashboard/orders" class="back-link">← Back to orders</a>
+
+<header class="dash-header" style="margin-top: 1rem;">
+    <p class="section-eyebrow">Order #{{ order.id }}</p>
+    <h1 class="dash-greeting">{{ order.status|capitalize }}</h1>
+    <p class="dash-subtitle">
+        Placed on {{ order.created_at.strftime('%B %d, %Y') }} · {{ order.items|length }} item{{ 's' if order.items|length != 1 else '' }}
+    </p>
+</header>
+
+<div class="order-detail-grid">
+
+    <div class="order-detail-items">
+        <h2 class="confirm-items-title">Items</h2>
+        {% for item in order.items %}
+        <div class="confirm-item">
+            <div class="confirm-item-image">
+                <img src="{{ url_for('static', filename='images/' + item.product_image) }}" alt="{{ item.product_name }}">
+            </div>
+            <div class="confirm-item-info">
+                <p class="confirm-item-name">{{ item.product_name }}</p>
+                <p class="confirm-item-meta">Qty {{ item.quantity }} · ${{ "%.2f"|format(item.unit_price) }}</p>
+            </div>
+            <p class="confirm-item-total">${{ "%.2f"|format(item.unit_price * item.quantity) }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <aside class="order-detail-side">
+        <div class="checkout-card">
+            <h2 class="checkout-card-title">Shipping to</h2>
+            <p class="order-detail-line">{{ order.full_name }}</p>
+            <p class="order-detail-line">{{ order.address_line }}</p>
+            <p class="order-detail-line">{{ order.city }}, {{ order.postal_code }}</p>
+            <p class="order-detail-line">{{ order.country }}</p>
+            <p class="order-detail-line">{{ order.phone }}</p>
+            <p class="order-detail-line">{{ order.email }}</p>
+        </div>
+
+        <div class="checkout-card">
+            <h2 class="checkout-card-title">Summary</h2>
+            <div class="cart-summary-row">
+                <span>Subtotal</span>
+                <span>${{ "%.2f"|format(order.subtotal) }}</span>
+            </div>
+            <div class="cart-summary-row">
+                <span>Shipping</span>
+                <span>{% if order.shipping == 0 %}Free{% else %}${{ "%.2f"|format(order.shipping) }}{% endif %}</span>
+            </div>
+            <div class="cart-summary-total">
+                <span>Total</span>
+                <span>${{ "%.2f"|format(order.total) }}</span>
+            </div>
+        </div>
+    </aside>
+
+</div>
+
+{% endblock %}

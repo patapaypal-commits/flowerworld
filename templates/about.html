@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-about{% endblock %}
+{% block title %}About — Flowerworld{% endblock %}
+
+{% block content %}
+<section class="about-hero">
+    <div class="about-hero-inner">
+        <p class="section-eyebrow">our story</p>
+        <h1 class="about-hero-title">Made slowly, in small batches.</h1>
+        <p class="about-hero-subtitle">
+            Flowerworld is a small studio making seasonal dried-flower arrangements,
+            wreaths, and botanical home goods. Everything is hand-arranged in our
+            studio using flowers grown locally and dried naturally.
+        </p>
+      </div>
+</section>
+
+<section class="about-story">
+    <div class="about-container about-story-grid">
+        <div class="about-story-image">
+           <img src="{{ url_for('static', filename='images/story.jpg') }}" alt="Our studio"> 
+        </div>
+        <div class="about-story-content">
+            <h2 class="about-heading">A studio, not a factory</h2>
+               <p class="about-text">
+                We started in a small studio with a simple belief: that a home should
+                feel like the season it's in. Every wreath, every bunch, every
+                arrangement is made by hand, one at a time, using dried botanicals
+                we've grown, gathered, or sourced from local growers.
+            </p>
+            <p class="about-text">
+                Nothing is mass-produced. Nothing is plastic. What you receive is a
+                quiet, natural thing that will last for months — and then, when the
+                time comes, return to the earth.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="about-map-section">
+    <div class="about-container">
+        <header class="about-section-header">
+            <p class="section-eyebrow">Visit us</p>
+            <h2 class="about-heading">Find the studio</h2>
+        </header>
+        <div class="about-map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.8354345093747!2d144.95373531531674!3d-37.81627977975154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzfCsDQ4JzU4LjYiUyAxNDTCsDU3JzIxLjMiRQ!5e0!3m2!1sen!2sau!4v1614301234567!5m2!1sen!2sau"
+                width="100%"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+</section>
+
+<section class="about-contact">
+    <div class="about-container about-contact-inner">
+        <p class="section-eyebrow">Get in touch</p>
+        <h2 class="about-heading">Contact us</h2>
+        <p class="about-contact-text">
+            For inquiries, custom orders, or wholesale — send us a note.
+            We usually reply within a day.
+        </p>
+
+        <div class="about-contact-cards">
+            <a href="mailto:hello@flowerworld.com" class="contact-card">
+                <span class="contact-card-label">Email</span>
+                <span class="contact-card-value">hello@flowerworld.com</span>
+            </a>
+            <a href="tel:+1234567890" class="contact-card">
+                <span class="contact-card-label">Phone</span>
+                <span class="contact-card-value">+1 (234) 567-890</span>
+            </a>
+            <a href="mailto:hello@flowerworld.com?subject=Custom%20Order%20Inquiry" class="contact-card contact-card--cta">
+                <span class="contact-card-label">Custom orders</span>
+                <span class="contact-card-value">Send an inquiry →</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

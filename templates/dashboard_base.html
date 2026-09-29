@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-dashboard{% endblock %}
+
+{% block content %}
+<section class="dash">
+    <div class="dash-shell">
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="dash-side">
+            <div class="dash-user">
+                <div class="dash-avatar">
+                    {{ user.first_name[0] }}{{ user.last_name[0] }}
+                </div>
+                <div class="dash-user-info">
+                    <p class="dash-user-name">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="dash-user-email">{{ user.email }}</p>
+                </div>
+            </div>
+
+            <nav class="dash-nav">
+                <a href="/dashboard" class="dash-nav-link {% if active == 'overview' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Overview
+                </a>
+                <a href="/dashboard/orders" class="dash-nav-link {% if active == 'orders' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    Orders
+                </a>
+                <a href="/dashboard/wishlist" class="dash-nav-link {% if active == 'wishlist' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    Wishlist
+                </a>
+                <a href="/dashboard/addresses" class="dash-nav-link {% if active == 'addresses' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Addresses
+                </a>
+                <a href="/dashboard/cards" class="dash-nav-link {% if active == 'cards' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                    Payment cards
+                </a>
+                <a href="/dashboard/settings" class="dash-nav-link {% if active == 'settings' %}active{% endif %}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    Settings
+                </a>
+            </nav>
+
+            <a href="/logout" class="dash-logout">Log out</a>
+        </aside>
+
+        <!-- ============ MAIN ============ -->
+        <main class="dash-main">
+            {% block dashboard_content %}{% endblock %}
+        </main>
+
+    </div>
+</section>
+{% endblock %}

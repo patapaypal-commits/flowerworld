@@ -1,0 +1,53 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Orders — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<header class="dash-header">
+    <p class="section-eyebrow">Your account</p>
+    <h1 class="dash-greeting">Orders</h1>
+    <p class="dash-subtitle">
+        {% if orders %}
+            {{ orders|length }} order{{ 's' if orders|length != 1 else '' }} placed.
+        {% else %}
+            Every order you've placed with Flowerworld.
+        {% endif %}
+    </p>
+</header>
+
+{% if orders %}
+<div class="orders-list">
+    {% for order in orders %}
+    <a href="/dashboard/orders/{{ order.id }}" class="order-row">
+        <div class="order-row-info">
+            <p class="order-row-id">Order #{{ order.id }}</p>
+            <p class="order-row-date">{{ order.created_at.strftime('%B %d, %Y') }}</p>
+        </div>
+        <div class="order-row-meta">
+            <p class="order-row-items">
+                {{ order.items|length }} item{{ 's' if order.items|length != 1 else '' }}
+            </p>
+            <p class="order-row-total">${{ "%.2f"|format(order.total) }}</p>
+        </div>
+        <div class="order-row-status order-status--{{ order.status }}">
+            {{ order.status|capitalize }}
+        </div>
+        <div class="order-row-arrow">→</div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+
+<div class="dash-empty">
+    <div class="dash-empty-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </div>
+    <h3 class="dash-empty-title">No orders yet</h3>
+    <p class="dash-empty-text">Once you place an order, you'll be able to track it here.</p>
+    <a href="/shop" class="btn">Start shopping</a>
+</div>
+
+{% endif %}
+
+{% endblock %}

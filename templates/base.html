@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flowerworld{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+    <header class="site-header">
+        <nav class="nav">
+            <a href="/" class="brand">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Flowerworld">
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/shop">Shop</a></li>
+                <li><a href="/about">About</a></li>
+                <li>
+                    <a href="/cart">
+                        Cart{% if g.cart_count %} ({{ g.cart_count }}){% endif %}
+                    </a>
+                </li>
+
+                {% if g.user %}
+                <li class="nav-user">
+                    <button type="button" class="nav-user-btn" id="navUserBtn" aria-label="Account menu">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                        </svg>
+                    </button>
+
+                    <div class="nav-user-menu" id="navUserMenu">
+                        <div class="nav-user-header">
+                            <p class="nav-user-name">{{ g.user.first_name }} {{ g.user.last_name }}</p>
+                            <p class="nav-user-email">{{ g.user.email }}</p>
+                        </div>
+                        <a href="/dashboard" class="nav-user-link">Dashboard</a>
+                        <a href="/dashboard/settings" class="nav-user-link">Account settings</a>
+                        <a href="/dashboard/cards" class="nav-user-link">Payment cards</a>
+                        <div class="nav-user-divider"></div>
+                        <a href="/logout" class="nav-user-link nav-user-link--danger">Log out</a>
+                    </div>
+                </li>
+                {% else %}
+                    <li><a href="/login">Log in</a></li>
+                    
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Flowerworld. All rights reserved.</p>
+    </footer>
+
+    <script>
+    (function () {
+        const btn = document.getElementById('navUserBtn');
+        const menu = document.getElementById('navUserMenu');
+        if (!btn || !menu) return;
+
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            menu.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', function () {
+            menu.classList.remove('is-open');
+        });
+
+        menu.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () {
+                menu.classList.remove('is-open');
+            });
+        });
+    })();
+    </script>
+
+</body>
+</html>

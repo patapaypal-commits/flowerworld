@@ -1,0 +1,80 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Addresses — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<header class="dash-header">
+    <p class="section-eyebrow">Your account</p>
+    <h1 class="dash-greeting">Addresses</h1>
+    <p class="dash-subtitle">
+        {% if addresses %}
+            {{ addresses|length }} saved address{{ 'es' if addresses|length != 1 else '' }}.
+        {% else %}
+            Add an address to speed up checkout.
+        {% endif %}
+    </p>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="flash flash--{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% if addresses %}
+<div class="address-grid">
+    {% for address in addresses %}
+    <div class="address-card {% if address.is_default %}address-card--default{% endif %}">
+        {% if address.is_default %}
+        <span class="address-badge">Default</span>
+        {% endif %}
+
+        <p class="address-label">{{ address.label }}</p>
+        <p class="address-name">{{ address.full_name }}</p>
+        <p class="address-line">{{ address.address_line1 }}</p>
+        {% if address.address_line2 %}
+        <p class="address-line">{{ address.address_line2 }}</p>
+        {% endif %}
+        <p class="address-line">{{ address.city }}{% if address.state %}, {{ address.state }}{% endif %} {{ address.postal_code }}</p>
+        <p class="address-line">{{ address.country }}</p>
+        <p class="address-phone">{{ address.phone }}</p>
+
+        <div class="address-actions">
+            <a href="/dashboard/addresses/{{ address.id }}/edit" class="address-action">Edit</a>
+
+            {% if not address.is_default %}
+            <form method="POST" action="/dashboard/addresses/{{ address.id }}/default" class="address-action-form">
+                <button type="submit" class="address-action">Make default</button>
+            </form>
+            {% endif %}
+
+            <form method="POST" action="/dashboard/addresses/{{ address.id }}/delete" class="address-action-form" onsubmit="return confirm('Delete this address?');">
+                <button type="submit" class="address-action address-action--danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+
+<div class="dash-empty">
+    <div class="dash-empty-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    </div>
+    <h3 class="dash-empty-title">No addresses saved</h3>
+    <p class="dash-empty-text">Add an address to speed up checkout.</p>
+    <a href="/dashboard/addresses/new" class="btn">Add address</a>
+</div>
+
+{% endif %}
+
+{% if addresses %}
+<div class="addresses-add-row">
+    <a href="/dashboard/addresses/new" class="btn">+ Add new address</a>
+</div>
+{% endif %}
+
+{% endblock %}

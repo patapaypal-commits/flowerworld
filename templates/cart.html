@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-cart{% endblock %}
+{% block title %}Cart — Flowerworld{% endblock %}
+
+{% block content %}
+<section class="cart-shell">
+    <div class="cart-inner">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash flash--{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <header class="cart-header">
+            <p class="section-eyebrow">Your cart</p>
+            <h1 class="cart-title">Shopping bag</h1>
+            <p class="cart-count-text">
+                {% if items %}
+                    {{ items|length }} item{{ 's' if items|length != 1 else '' }} in your bag
+                {% else %}
+                    Your bag is empty
+                {% endif %}
+            </p>
+        </header>
+
+        {% if items %}
+        <div class="cart-grid">
+
+            <!-- ============ ITEMS ============ -->
+            <div class="cart-items">
+                {% for item in items %}
+                <div class="cart-item">
+
+                    <a href="/product/{{ item.product.id }}" class="cart-item-image">
+                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+                    </a>
+
+                    <div class="cart-item-info">
+                        <p class="cart-item-category">{{ item.product.category }}</p>
+                        <h3 class="cart-item-name">
+                            <a href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
+                        </h3>
+                        <p class="cart-item-unit">${{ "%.2f"|format(item.product.price) }} each</p>
+
+                        <form method="POST" action="/cart/remove/{{ item.id }}" class="cart-remove-form">
+                            <button type="submit" class="cart-remove-btn">Remove</button>
+                        </form>
+                    </div>
+
+                    <div class="cart-item-qty">
+                        <form method="POST" action="/cart/update/{{ item.id }}" class="cart-qty-form">
+                            <button type="submit" name="quantity" value="{{ item.quantity - 1 }}" class="cart-qty-btn" aria-label="Decrease">−</button>
+                            <span class="cart-qty-value">{{ item.quantity }}</span>
+                            <button type="submit" name="quantity" value="{{ item.quantity + 1 }}" class="cart-qty-btn" aria-label="Increase">+</button>
+                        </form>
+                    </div>
+
+                    <div class="cart-item-total">
+                        ${{ "%.2f"|format(item.product.price * item.quantity) }}
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- ============ SUMMARY ============ -->
+            <aside class="cart-summary">
+                <h2 class="cart-summary-title">Order summary</h2>
+
+                <div class="cart-summary-row">
+                    <span>Subtotal</span>
+                    <span>${{ "%.2f"|format(subtotal) }}</span>
+                </div>
+
+                <div class="cart-summary-row">
+                    <span>Shipping</span>
+                    <span>
+                        {% if shipping == 0 %}
+                            Free
+                        {% else %}
+                            ${{ "%.2f"|format(shipping) }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                {% if shipping > 0 %}
+                <p class="cart-shipping-note">
+                    Free shipping on orders over $75.
+                </p>
+                {% endif %}
+
+                <div class="cart-summary-total">
+                    <span>Total</span>
+                    <span>${{ "%.2f"|format(total) }}</span>
+                </div>
+
+                <a href="/checkout" class="btn cart-checkout">
+    Checkout
+</a>
+
+                
+
+                <a href="/shop" class="cart-continue">← Continue shopping</a>
+            </aside>
+
+        </div>
+        {% else %}
+
+        <!-- ============ EMPTY STATE ============ -->
+        <div class="cart-empty">
+            <div class="cart-empty-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+            </div>
+            <h2 class="cart-empty-title">Your bag is empty</h2>
+            <p class="cart-empty-text">
+                Add a piece from the shop and it will appear here.
+            </p>
+            <a href="/shop" class="btn">Explore the collection</a>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}

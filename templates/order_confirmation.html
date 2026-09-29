@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block body_class %}page-checkout{% endblock %}
+{% block title %}Order confirmed — Flowerworld{% endblock %}
+
+{% block content %}
+<section class="confirm-shell">
+    <div class="confirm-inner">
+
+        <div class="confirm-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        </div>
+
+        <p class="section-eyebrow">Order confirmed</p>
+        <h1 class="confirm-title">Thank you, {{ order.full_name.split(' ')[0] }}.</h1>
+        <p class="confirm-subtitle">
+            Your order <strong>#{{ order.id }}</strong> has been placed.
+            A confirmation email has been sent to {{ order.email }}.
+        </p>
+
+        <div class="confirm-details">
+            <div class="confirm-detail">
+                <p class="confirm-detail-label">Status</p>
+                <p class="confirm-detail-value">{{ order.status|capitalize }}</p>
+            </div>
+            <div class="confirm-detail">
+                <p class="confirm-detail-label">Total</p>
+                <p class="confirm-detail-value">${{ "%.2f"|format(order.total) }}</p>
+            </div>
+            <div class="confirm-detail">
+                <p class="confirm-detail-label">Shipping to</p>
+                <p class="confirm-detail-value">{{ order.city }}, {{ order.country }}</p>
+            </div>
+        </div>
+
+        <div class="confirm-items">
+            <h2 class="confirm-items-title">What you ordered</h2>
+            {% for item in order.items %}
+            <div class="confirm-item">
+                <div class="confirm-item-image">
+                    <img src="{{ url_for('static', filename='images/' + item.product_image) }}" alt="{{ item.product_name }}">
+                </div>
+                <div class="confirm-item-info">
+                    <p class="confirm-item-name">{{ item.product_name }}</p>
+                    <p class="confirm-item-meta">Qty {{ item.quantity }} · ${{ "%.2f"|format(item.unit_price) }}</p>
+                </div>
+                <p class="confirm-item-total">${{ "%.2f"|format(item.unit_price * item.quantity) }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="confirm-actions">
+            <a href="/dashboard/orders" class="btn">View your orders</a>
+            <a href="/shop" class="confirm-secondary">Continue shopping</a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Wishlist — Flowerworld{% endblock %}
+
+{% block dashboard_content %}
+
+<header class="dash-header">
+    <p class="section-eyebrow">Your account</p>
+    <h1 class="dash-greeting">Wishlist</h1>
+    <p class="dash-subtitle">
+        {% if items %}
+            {{ items|length }} saved piece{{ 's' if items|length != 1 else '' }}.
+        {% else %}
+            Pieces you've saved for later.
+        {% endif %}
+    </p>
+</header>
+
+{% if items %}
+<div class="wishlist-grid">
+    {% for item in items %}
+    <div class="wishlist-card">
+        <a href="/product/{{ item.product.id }}" class="wishlist-card-image">
+            <img src="{{ url_for('static', filename='images/' + item.product.image) }}" alt="{{ item.product.name }}">
+        </a>
+        <div class="wishlist-card-info">
+            <h3 class="wishlist-card-name">
+                <a href="/product/{{ item.product.id }}">{{ item.product.name }}</a>
+            </h3>
+            <p class="wishlist-card-price">${{ "%.2f"|format(item.product.price) }}</p>
+
+            <div class="wishlist-card-actions">
+                <form method="POST" action="/cart/add/{{ item.product.id }}" class="wishlist-add-form">
+                    <button type="submit" class="wishlist-add-btn">Add to cart</button>
+                </form>
+                <form method="POST" action="/wishlist/toggle/{{ item.product.id }}">
+                    <button type="submit" class="wishlist-remove-btn">Remove</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+
+<div class="dash-empty">
+    <div class="dash-empty-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </div>
+    <h3 class="dash-empty-title">Your wishlist is empty</h3>
+    <p class="dash-empty-text">Save pieces you love and they'll show up here.</p>
+    <a href="/shop" class="btn">Explore the collection</a>
+</div>
+
+{% endif %}
+
+{% endblock %}
