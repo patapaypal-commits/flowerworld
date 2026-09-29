@@ -13,6 +13,9 @@ app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-fallback-key")
 
+if os.getenv("FLASK_ENV") == "production" and app.config["SECRET_KEY"] == "dev-fallback-key":
+    raise RuntimeError("SECRET_KEY must be set in production")
+
 db = SQLAlchemy(app)
 
 
